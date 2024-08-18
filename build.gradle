@@ -49,7 +49,3 @@ processResources {
         expand props
     }
 }
-
-jar {
-    destinationDirectory = file("C:\\Users\\Administrator\\Desktop\\ButterPL\\plugins")
-}
