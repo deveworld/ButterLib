@@ -1,0 +1,5 @@
+name: ButterLib
+version: '1.0.0'
+author: ButterPL (HanYung,AEDU)
+main: kr.bp.butterLib.Main
+api-version: '1.17'
