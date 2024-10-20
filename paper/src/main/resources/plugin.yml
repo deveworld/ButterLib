@@ -1,0 +1,8 @@
+name: ButterLib
+version: $version
+main: io.github.teambutterpl.butterlib.paper.ButterLib
+
+# this because of change of resource pack's font shift.
+# https://feedback.minecraft.net/hc/en-us/articles/26136167989005-Minecraft-Java-Edition-1-20-5-Armored-Paws#:~:text=shift%C2%A0is%20no%20longer%20applied%20double%2C%20and%20now%20directly%20represents%20a%20number%20of%20pixels%20in%20the%20game%20UI
+# this affect to user interface, so we need at least 1.20.5
+api-version: '1.20.5'

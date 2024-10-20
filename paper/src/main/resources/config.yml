@@ -1,0 +1,6 @@
+socket:
+    serverName: butterlib
+    findDelay: 5000
+
+gui:
+    fontFile: "unifont.ttf"
