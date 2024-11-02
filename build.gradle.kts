@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "2.0.21"
     id("com.gradleup.shadow") version "8.3.3"
     id("java")
+    id("maven-publish")
 }
 
 project.version = "0.0.1-alpha-1"
@@ -24,6 +25,7 @@ allprojects {
     group = "io.github.teambutterpl"
     version = project.version
 
+    apply(plugin = "maven-publish")
     apply(plugin = "com.gradleup.shadow")
     apply(plugin = "java")
 
