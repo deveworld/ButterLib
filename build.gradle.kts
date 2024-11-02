@@ -19,22 +19,14 @@ publishing {
             artifactId = project.name.toString()
             version = project.version.toString()
 
-            from(components.getByName("java"))
+            artifact(tasks.shadowJar)
 
-            // Remove all dependencies from the generated POM
+            // Completely suppress all dependency declarations
+            suppressAllPomMetadataWarnings()
             pom {
                 withXml {
-                    val root = asNode()
-                    val dependencies = root.children().find { (it as groovy.util.Node).name() == "dependencies" }
-                    if (dependencies != null) {
-                        root.remove(dependencies as groovy.util.Node)
-                    }
+                    asNode().appendNode("dependencies")  // Creates empty dependencies node
                 }
-            }
-
-            // Replace the original jar with shadow jar
-            artifact(tasks.getByName("shadowJar")) {
-                classifier = ""
             }
         }
     }
@@ -43,6 +35,7 @@ publishing {
 tasks {
     shadowJar {
         archiveClassifier.set("")
+        exclude("${project.group}/**")
     }
 
     build {
