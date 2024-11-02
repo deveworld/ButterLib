@@ -15,7 +15,11 @@ dependencies {
 publishing {
     publications {
         create<MavenPublication>("shadow") {
-            from(components["java"])
+            groupId = project.group.toString()
+            artifactId = project.name.toString()
+            version = project.version.toString()
+
+            from(components.getByName("java"))
 
             // Remove all dependencies from the generated POM
             pom {
@@ -29,7 +33,7 @@ publishing {
             }
 
             // Include the shadow jar instead of the original jar
-            artifact(tasks["shadowJar"])
+            artifact(tasks.getByName("shadowJar"))
         }
     }
 }
