@@ -32,8 +32,10 @@ publishing {
                 }
             }
 
-            // Include the shadow jar instead of the original jar
-            artifact(tasks.getByName("shadowJar"))
+            // Replace the original jar with shadow jar
+            artifact(tasks.getByName("shadowJar")) {
+                classifier = ""
+            }
         }
     }
 }
@@ -45,6 +47,10 @@ tasks {
 
     build {
         dependsOn(shadowJar)
+    }
+
+    jar {
+        enabled = false
     }
 }
 
