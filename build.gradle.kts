@@ -4,7 +4,7 @@ plugins {
     id("java")
 }
 
-project.version = "0.0.1-test-1"
+project.version = "0.0.1-alpha-1"
 
 dependencies {
     implementation(project(":paper", "shadow"))

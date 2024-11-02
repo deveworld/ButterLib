@@ -1,9 +1,11 @@
 package io.github.teambutterpl.butterlib.api.resourcepack
 
 import io.github.teambutterpl.butterlib.api.resourcepack.models.BaseModel
+import io.github.teambutterpl.butterlib.api.resourcepack.models.FileModel
 import io.github.teambutterpl.butterlib.api.resourcepack.models.FontFile
 import io.github.teambutterpl.butterlib.api.resourcepack.models.ImageFile
 import io.github.teambutterpl.butterlib.api.resourcepack.models.PackMcmeta
+import io.github.teambutterpl.butterlib.api.resourcepack.models.StaticImageFile
 import java.nio.file.InvalidPathException
 import java.nio.file.Paths
 import kotlin.reflect.full.declaredMemberProperties
@@ -19,14 +21,14 @@ class ResourcePackBuilder {
     lateinit var packPngFile: ImageFile
     private lateinit var packMcmeta: PackMcmeta
     private lateinit var fontFile: FontFile
+    private var buildZip: Boolean = true
 
     val images = mutableListOf<ImageFile>()
 
     private fun toAbsolutePath(path: String) = if (path.contains("/")) path else "/$path"
 
-    fun addImageFile(file: String, path: String = "/assets/minecraft/textures/custom/ui/$file"): ResourcePackBuilder {
-        val fileName = toAbsolutePath(file)
-        images.add(ImageFile(fileName, path))
+    fun addStaticImageFile(name: String, path: String = "/assets/minecraft/textures/custom/ui/$name", data: ByteArray): ResourcePackBuilder {
+        images.add(StaticImageFile(name, path, data))
         return this
     }
 
@@ -65,6 +67,11 @@ class ResourcePackBuilder {
         return this
     }
 
+    fun buildZip(buildZip: Boolean): ResourcePackBuilder {
+        this.buildZip = buildZip
+        return this
+    }
+
     fun build(): ResourcePack {
         this::class.declaredMemberProperties.forEach { property ->
             if (property.isLateinit && property.javaField?.get(this) == null && property.name != "models") {
@@ -76,6 +83,6 @@ class ResourcePackBuilder {
             packMcmeta,
             fontFile,
         )
-        return ResourcePack(this)
+        return ResourcePack(this, buildZip=buildZip)
     }
 }

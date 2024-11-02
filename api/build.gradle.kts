@@ -10,6 +10,7 @@ repositories {
 dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("org.yaml:snakeyaml:2.3")
+    implementation("org.zeroturnaround:zt-zip:1.17")
 }
 
 tasks.test {
@@ -32,6 +33,7 @@ tasks {
 
             include(dependency("com.google.code.gson:gson"))
             include(dependency("org.yaml:snakeyaml"))
+            include(dependency("org.zeroturnaround:zt-zip"))
         }
     }
 }

@@ -1,12 +1,12 @@
 package io.github.teambutterpl.butterlib.api.resourcepack.models
 
-open class ImageFile(
-    override val inputPath: String,
+class StaticImageFile(
+    filename: String,
     override val outputPath: String,
-    override val fromResources: Boolean = true,
-) : FileModel(inputPath, outputPath, fromResources) {
+    override var data: ByteArray,
+) : ImageFile(filename, outputPath, false) {
     init {
-        if (!inputPath.endsWith(".png")) {
+        if (!filename.endsWith(".png")) {
             throw IllegalArgumentException("File must be a PNG image file.")
         }
     }

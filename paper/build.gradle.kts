@@ -19,7 +19,9 @@ repositories {
 dependencies {
     implementation(project(":api", "shadow"))
 
-    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+    // api-version is 1.20.5, but we will use 1.20.6 paper dev bundle
+    // Because 1.20.6 is the latest version of 1.20.x
+    paperweight.paperDevBundle("1.20.6-R0.1-SNAPSHOT")
 }
 
 tasks {

@@ -2,11 +2,13 @@ package io.github.teambutterpl.butterlib.api.resourcepack
 
 import io.github.teambutterpl.butterlib.api.resourcepack.models.BaseModel
 import io.github.teambutterpl.butterlib.api.resourcepack.models.BaseModels
+import io.github.teambutterpl.butterlib.api.resourcepack.models.FileModel
 import io.github.teambutterpl.butterlib.api.resourcepack.models.FontCustomDefault
 import io.github.teambutterpl.butterlib.api.resourcepack.models.FontJsonModels
 import io.github.teambutterpl.butterlib.api.resourcepack.models.ImageFile
 import io.github.teambutterpl.butterlib.api.resourcepack.models.JsonFile
 import io.github.teambutterpl.butterlib.api.resourcepack.models.SpaceModels
+import org.zeroturnaround.zip.ZipUtil
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -48,7 +50,10 @@ import java.nio.file.Paths
  *                 └── space_split.png
  */
 
-class ResourcePack(resourcePackBuilder: ResourcePackBuilder) {
+class ResourcePack(
+    resourcePackBuilder: ResourcePackBuilder,
+    buildZip: Boolean = true
+) {
     private val resourcePackName = resourcePackBuilder.name
     private val models = resourcePackBuilder.models
     private val images: List<ImageFile>
@@ -77,7 +82,7 @@ class ResourcePack(resourcePackBuilder: ResourcePackBuilder) {
     private fun writeModel(model: BaseModel) {
         if (outputFiles.contains(model.outputPath)) throw IllegalArgumentException("File ${model.outputPath} already exists, use different path")
         outputFiles.add(model.outputPath)
-        val normalizedFilePath = model.outputPath.removePrefix("/")
+        val normalizedFilePath = model.outputPath.removePrefix("/").removePrefix(File.separator)
         val output = Paths.get(dataPath.absolutePath, normalizedFilePath).normalize().toAbsolutePath().toFile()
 
         output.parentFile.mkdirs()
@@ -91,23 +96,6 @@ class ResourcePack(resourcePackBuilder: ResourcePackBuilder) {
 
     fun getImage(name: String): Char {
         return imageChar[name] ?: throw IllegalArgumentException("Image $name not found")
-    }
-
-    private fun zip(inputDirectory: File, outputZipFile: File) {
-        if (outputZipFile.exists()) {
-            outputZipFile.delete()
-        }
-        outputZipFile.createNewFile()
-        ZipOutputStream(BufferedOutputStream(FileOutputStream(outputZipFile))).use { zos ->
-            inputDirectory.walkTopDown().forEach { file ->
-                val zipFileName = file.absolutePath.removePrefix(inputDirectory.absolutePath).removePrefix("/")
-                val entry = ZipEntry( "$zipFileName${(if (file.isDirectory) "/" else "" )}")
-                zos.putNextEntry(entry)
-                if (file.isFile) {
-                    file.inputStream().use { fis -> fis.copyTo(zos) }
-                }
-            }
-        }
     }
 
     init {
@@ -136,7 +124,6 @@ class ResourcePack(resourcePackBuilder: ResourcePackBuilder) {
         models.forEach { writeModel(it) }
         images.forEach { writeModel(it) }
 
-        zip(dataPath, output)
-        dataPath.deleteRecursively()
+        if (buildZip) ZipUtil.pack(dataPath, output)
     }
 }
