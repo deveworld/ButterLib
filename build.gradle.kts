@@ -6,9 +6,32 @@ plugins {
 }
 
 project.version = "0.0.1-alpha-1"
+project.group = "io.github.teambutterpl"
 
 dependencies {
     implementation(project(":paper", "shadow"))
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("shadow") {
+            from(components["java"])
+
+            // Remove all dependencies from the generated POM
+            pom {
+                withXml {
+                    val root = asNode()
+                    val dependencies = root.children().find { (it as groovy.util.Node).name() == "dependencies" }
+                    if (dependencies != null) {
+                        root.remove(dependencies as groovy.util.Node)
+                    }
+                }
+            }
+
+            // Include the shadow jar instead of the original jar
+            artifact(tasks["shadowJar"])
+        }
+    }
 }
 
 tasks {
@@ -22,23 +45,11 @@ tasks {
 }
 
 allprojects {
-    group = "io.github.teambutterpl"
+    group = project.group
     version = project.version
 
-    apply(plugin = "maven-publish")
     apply(plugin = "com.gradleup.shadow")
     apply(plugin = "java")
-
-    publishing {
-        publications {
-            create("maven-public", MavenPublication::class) {
-                groupId = rootProject.group.toString()
-                artifactId = rootProject.name
-                version = rootProject.version.toString()
-                from(components.getByName("java"))
-            }
-        }
-    }
 
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
