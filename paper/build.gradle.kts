@@ -4,8 +4,6 @@ plugins {
     id("io.papermc.paperweight.userdev") version "1.7.3"
 }
 
-project.version = "0.0.1-test-1"
-
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/") {

@@ -29,6 +29,17 @@ allprojects {
     apply(plugin = "com.gradleup.shadow")
     apply(plugin = "java")
 
+    publishing {
+        publications {
+            create("maven-public", MavenPublication::class) {
+                groupId = rootProject.group.toString()
+                artifactId = rootProject.name
+                version = rootProject.version.toString()
+                from(components.getByName("java"))
+            }
+        }
+    }
+
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
         disableAutoTargetJvm()
